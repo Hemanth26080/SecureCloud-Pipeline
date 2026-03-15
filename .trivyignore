@@ -15,11 +15,11 @@ CVE-2026-0861
 # Fix available: YES — jaraco.context >= 6.1.0 pinned in requirements.txt
 # Status: Temporary suppression — will be resolved on next Docker image rebuild
 # Remove this entry after image is rebuilt with patched deps
-CVE-2026-23949
+#CVE-2026-23949
 
 # CVE-2026-24049: Privilege escalation in wheel < 0.46.2
 # Affects: wheel (transitive dep)
 # Fix available: YES — wheel >= 0.46.2 pinned in requirements.txt
 # Status: Temporary suppression — will be resolved on next Docker image rebuild
 # Remove this entry after image is rebuilt with patched deps
-CVE-2026-24049
+#CVE-2026-24049
