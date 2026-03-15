@@ -5,7 +5,7 @@ pipeline {
         REGISTRY    = '675175159273.dkr.ecr.us-east-1.amazonaws.com'
         IMAGE       = 'securecloud-flask'
         AWS_REGION  = 'us-east-1'
-        TRIVY_SEVER = 'CRITICAL,HIGH'
+        TRIVY_SEVERITY = 'CRITICAL,HIGH'
     }
 
     stages {
@@ -46,7 +46,7 @@ pipeline {
             steps {
                 sh """
                     trivy image \
-                        --severity ${env.TRIVY_SEVER} \
+                        --severity ${env.TRIVY_SEVERITY} \
                         --ignorefile .trivyignore \
                         --exit-code 1 \
                         ${env.IMAGE}:${env.BUILD_NUMBER}

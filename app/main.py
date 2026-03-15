@@ -46,4 +46,5 @@ def get_users():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    # nosec B104 — binding to 0.0.0.0 is intentional inside a Docker container
+    app.run(host="0.0.0.0", port=port)  # nosec B104

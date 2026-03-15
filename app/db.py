@@ -22,7 +22,7 @@ def get_db_pool():
     else:
         creds = {
             "username": os.environ.get("DB_USER", "flask_user"),
-            "password": os.environ.get("DB_PASSWORD", "changeme"),
+            "password": os.environ.get("DB_PASSWORD", ""),  # nosec B105 — no default; must be set via env
             "host":     os.environ.get("DB_HOST", "localhost"),
             "dbname":   os.environ.get("DB_NAME", "flaskdb"),
         }
