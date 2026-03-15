@@ -1,0 +1,37 @@
+FROM jenkins/jenkins:lts-jdk17
+
+USER root
+
+# Install dependencies for Python, Docker CLI, and Trivy
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    python3-venv \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Docker CLI (to communicate with the host's Docker daemon)
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list && \
+    apt-get update && apt-get install -y docker-ce-cli && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Trivy for security scanning
+RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.48.3
+
+# Set up a virtual environment for Python tools to avoid "externally-managed-environment" errors
+# and ensure pip is available as 'pip3'
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Pre-install common tools to speed up pipeline
+RUN pip3 install --no-cache-dir flake8 bandit pytest pytest-cov
+
+# Switch back to the jenkins user for security, 
+# although the compose file currently overrides this to root.
+USER jenkins

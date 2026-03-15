@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        REGISTRY   = 'YOUR-ACCOUNT-ID.dkr.ecr.eu-west-3.amazonaws.com'
-        IMAGE      = 'securecloud-flask'
-        AWS_REGION = 'us-east-1'
+        REGISTRY    = '675175159273.dkr.ecr.us-east-1.amazonaws.com'
+        IMAGE       = 'securecloud-flask'
+        AWS_REGION  = 'us-east-1'
         TRIVY_SEVER = 'CRITICAL,HIGH'
     }
 

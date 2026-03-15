@@ -1,0 +1,14 @@
+.git
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+test-reports
+image_scan.txt
+pytest_error.txt
+test_results.txt
+docker/docker-compose.dev.yml
+docker/docker-compose.jenkins.yml
+docker/Dockerfile.jenkins
+node_modules
+.env

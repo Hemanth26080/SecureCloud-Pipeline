@@ -1,7 +1,9 @@
 version: "3.9"
 services:
   jenkins:
-    image: jenkins/jenkins:lts-jdk17
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.jenkins
     privileged: true
     user: root
     ports:
