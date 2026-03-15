@@ -1,0 +1,8 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.6, pytest-9.0.2, pluggy-1.6.0
+rootdir: C:\devops\SecureCloud-Pipeline
+collected 4 items
+
+tests\unit\test_routes.py ....                                           [100%]
+
+============================== 4 passed in 0.32s ==============================

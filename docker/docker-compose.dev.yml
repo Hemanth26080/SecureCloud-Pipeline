@@ -1,0 +1,39 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "5000:5000"      # your laptop:5000 → container:5000
+    environment:
+      - DB_HOST=db
+      - DB_USER=flask_user
+      - DB_PASSWORD=devpassword123
+      - DB_NAME=flaskdb
+      - USE_SECRETS_MANAGER=false
+    depends_on:
+      db:
+        condition: service_healthy   # Wait until DB is ready
+    security_opt:
+      - no-new-privileges:true       # Container can't gain extra permissions
+    read_only: false
+
+  db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=flaskdb
+      - MYSQL_USER=flask_user
+      - MYSQL_PASSWORD=devpassword123
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "flask_user", "-pdevpassword123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - db_data:/var/lib/mysql   # Keeps data even after container stops
+
+volumes:
+  db_data:

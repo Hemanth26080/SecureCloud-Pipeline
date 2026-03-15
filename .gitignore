@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*.pyo
+*.env
+venv/
+.DS_Store
+*.log
+terraform.tfstate
+terraform.tfstate.*
+*.tfvars
+!.tfvars.example
+.secrets/
+reports
+.terraform
+.terraform.lock.hcl
+.trivyignore

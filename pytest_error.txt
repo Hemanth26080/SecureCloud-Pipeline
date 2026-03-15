@@ -1,0 +1,12 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.6, pytest-9.0.2, pluggy-1.6.0 -- C:\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: C:\devops\SecureCloud-Pipeline
+collecting ... collected 4 items
+
+tests/unit/test_routes.py::test_health_returns_200 PASSED                [ 25%]
+tests/unit/test_routes.py::test_ready_returns_200 PASSED                 [ 50%]
+tests/unit/test_routes.py::test_root_returns_message PASSED              [ 75%]
+tests/unit/test_routes.py::test_users_returns_list PASSED                [100%]
+
+============================== 4 passed in 0.58s ==============================
