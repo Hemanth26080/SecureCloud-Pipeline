@@ -13,4 +13,3 @@ terraform.tfstate.*
 reports
 .terraform
 .terraform.lock.hcl
-.trivyignore
