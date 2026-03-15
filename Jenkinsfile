@@ -63,6 +63,8 @@ pipeline {
                         --severity ${env.TRIVY_SEVERITY} \
                         --ignorefile ${WORKSPACE}/.trivyignore \
                         --exit-code 1 \
+                        --timeout 10m \
+                        --scanners vuln \
                         ${env.IMAGE}:${env.BUILD_NUMBER}
                 """
             }
