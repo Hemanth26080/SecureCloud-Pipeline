@@ -88,9 +88,9 @@ pipeline {
         }
 
         stage('Approve Production?') {
-            input {
-                message "Deploy build #${BUILD_NUMBER} to PRODUCTION?"
-                ok "Yes, deploy it!"
+            steps {
+                input message: "Deploy build #${BUILD_NUMBER} to PRODUCTION?",
+                      ok: "Yes, deploy it!"
             }
         }
 
