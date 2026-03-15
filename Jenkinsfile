@@ -47,7 +47,7 @@ pipeline {
                 sh """
                     trivy image \
                         --severity ${env.TRIVY_SEVERITY} \
-                        --ignorefile .trivyignore \
+                        --ignorefile ${WORKSPACE}/.trivyignore \
                         --exit-code 1 \
                         ${env.IMAGE}:${env.BUILD_NUMBER}
                 """
