@@ -1,4 +1,5 @@
 variable "vpc_id" {}
+variable "environment" { default = "staging" }
 
 resource "aws_security_group" "alb" {
   name   = "securecloud-alb"
