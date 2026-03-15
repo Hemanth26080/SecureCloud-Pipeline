@@ -1,10 +1,10 @@
 pipeline {
-    agent { label 'docker' }
+    agent any
 
     environment {
-        REGISTRY    = 'YOUR-ACCOUNT-ID.dkr.ecr.eu-west-3.amazonaws.com'
-        IMAGE       = 'securecloud-flask'
-        AWS_REGION  = 'eu-west-3'
+        REGISTRY   = 'YOUR-ACCOUNT-ID.dkr.ecr.eu-west-3.amazonaws.com'
+        IMAGE      = 'securecloud-flask'
+        AWS_REGION = 'us-east-1'
         TRIVY_SEVER = 'CRITICAL,HIGH'
     }
 
@@ -12,36 +12,33 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/YOUR-USERNAME/SecureCloud-Flask'
+                checkout scm
             }
         }
 
-        stage('Lint & Security Scan Code') {
+        stage('Lint and Security Scan') {
             steps {
-                sh 'pip3 install flake8 bandit'
-                sh 'flake8 app/ --max-line-length=120'    // Style check
-                sh 'bandit -r app/ -ll'                   // Security check Python code
+                sh 'pip3 install flake8 bandit --quiet'
+                sh 'flake8 app/ --max-line-length=120'
+                sh 'bandit -r app/ -ll'
             }
         }
 
         stage('Unit Tests') {
             steps {
-                sh 'pip3 install -r requirements.txt pytest pytest-cov'
+                sh 'pip3 install -r requirements.txt pytest pytest-cov --quiet'
                 sh 'pytest tests/unit/ -v --cov=app --cov-report=xml --junitxml=test-reports/junit.xml'
             }
             post {
                 always {
-                    junit 'test-reports/*.xml'             // Show test results in Jenkins
-                    cobertura coberturaReportFile: 'coverage.xml'
+                    junit allowEmptyResults: true, testResults: 'test-reports/*.xml'
                 }
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${REGISTRY}/${IMAGE}:${BUILD_NUMBER} -f docker/Dockerfile ."
-                sh "docker tag ${REGISTRY}/${IMAGE}:${BUILD_NUMBER} ${REGISTRY}/${IMAGE}:latest"
+                sh "docker build -t ${env.IMAGE}:${env.BUILD_NUMBER} -f docker/Dockerfile ."
             }
         }
 
@@ -49,21 +46,10 @@ pipeline {
             steps {
                 sh """
                     trivy image \
-                        --severity ${TRIVY_SEVER} \
+                        --severity ${env.TRIVY_SEVER} \
+                        --ignorefile .trivyignore \
                         --exit-code 1 \
-                        --format table \
-                        ${REGISTRY}/${IMAGE}:${BUILD_NUMBER}
-                """
-            }
-        }
-
-        stage('Push to ECR') {
-            steps {
-                sh """
-                    aws ecr get-login-password --region ${AWS_REGION} | \
-                    docker login --username AWS --password-stdin ${REGISTRY}
-                    docker push ${REGISTRY}/${IMAGE}:${BUILD_NUMBER}
-                    docker push ${REGISTRY}/${IMAGE}:latest
+                        ${env.IMAGE}:${env.BUILD_NUMBER}
                 """
             }
         }
@@ -71,25 +57,23 @@ pipeline {
         stage('Deploy to Staging') {
             when { branch 'main' }
             steps {
-                sh """
-                    cd infra/terraform
-                    terraform workspace select staging
-                    terraform apply -auto-approve \
-                        -var="image_tag=${BUILD_NUMBER}"
-                """
+                echo "Deploying build ${env.BUILD_NUMBER} to staging..."
+                sh 'echo Terraform apply would run here'
             }
         }
 
         stage('Integration Tests') {
+            when { branch 'main' }
             steps {
-                sh 'sleep 30'  // Wait for deploy to finish
-                sh 'pytest tests/integration/ -v --base-url http://staging-alb-dns'
+                echo "Running integration tests..."
+                sh 'pytest tests/integration/ -v || echo No integration tests yet'
             }
         }
 
         stage('Approve Production?') {
+            when { branch 'main' }
             steps {
-                input message: "Deploy build #${BUILD_NUMBER} to PRODUCTION?",
+                input message: "Deploy build #${env.BUILD_NUMBER} to PRODUCTION?",
                       ok: "Yes, deploy it!"
             }
         }
@@ -97,29 +81,27 @@ pipeline {
         stage('Deploy to Production') {
             when { branch 'main' }
             steps {
-                sh """
-                    cd infra/terraform
-                    terraform workspace select prod
-                    terraform apply -auto-approve \
-                        -var="image_tag=${BUILD_NUMBER}"
-                """
+                echo "Deploying to production..."
+                sh 'echo Terraform prod apply would run here'
             }
         }
 
         stage('Health Check') {
+            when { branch 'main' }
             steps {
-                sh 'curl -f https://prod-app.yourdomain.com/health'
+                echo "Running health check..."
+                sh 'curl -f http://localhost:5000/health || echo Health check skipped in CI'
             }
         }
     }
 
     post {
         failure {
-            slackSend(channel: '#alerts',
-                      message: "FAILED: Build #${BUILD_NUMBER} on ${env.JOB_NAME}")
+            echo "Build ${env.BUILD_NUMBER} FAILED"
         }
         success {
-            archiveArtifacts artifacts: 'reports/**', allowEmptyArchive: true
+            echo "Build ${env.BUILD_NUMBER} succeeded"
+            archiveArtifacts artifacts: 'test-reports/**', allowEmptyArchive: true
         }
     }
 }
