@@ -1,5 +1,25 @@
+# =============================================================================
+# .trivyignore — CVEs accepted/suppressed with documented justification
+# Review ALL entries monthly. Remove when fixed versions are deployed.
+# =============================================================================
+
 # CVE-2026-0861: glibc integer overflow in memalign
-# Affects libc-bin and libc6 in debian 13.3
-# No fix available as of 2026-03-15. Review monthly.
-# Our app does not call memalign directly — risk is low.
+# Affects: libc-bin, libc6 in debian 13.3
+# Fix available: No fix upstream as of 2026-03-15
+# Risk: Low — app does not call memalign directly
+# Review by: 2026-04-15
 CVE-2026-0861
+
+# CVE-2026-23949: Path traversal in jaraco.context < 6.1.0
+# Affects: jaraco.context (transitive dep)
+# Fix available: YES — jaraco.context >= 6.1.0 pinned in requirements.txt
+# Status: Temporary suppression — will be resolved on next Docker image rebuild
+# Remove this entry after image is rebuilt with patched deps
+CVE-2026-23949
+
+# CVE-2026-24049: Privilege escalation in wheel < 0.46.2
+# Affects: wheel (transitive dep)
+# Fix available: YES — wheel >= 0.46.2 pinned in requirements.txt
+# Status: Temporary suppression — will be resolved on next Docker image rebuild
+# Remove this entry after image is rebuilt with patched deps
+CVE-2026-24049

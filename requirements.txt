@@ -5,5 +5,11 @@ prometheus-flask-exporter==0.23.0
 gunicorn==22.0.0
 python-dotenv==1.0.0
 
+# --- Pinned transitive deps to patch known CVEs ---
+# CVE-2026-23949: path traversal in jaraco.context <6.1.0
+jaraco.context>=6.1.0
+# CVE-2026-24049: privilege escalation in wheel <0.46.2
+wheel>=0.46.2
+
 # gunicorn==22.0.0                  # was 21.2.0 — fixes CVE-2024-1135 and CVE-2024-6827
 # mysql-connector-python==9.1.0     # was 8.3.0  — fixes CVE-2024-21272
