@@ -6,6 +6,7 @@ pipeline {
         IMAGE       = 'securecloud-flask'
         AWS_REGION  = 'us-east-1'
         TRIVY_SEVERITY = 'CRITICAL,HIGH'
+        SONAR_TOKEN = credentials('scanner-token')
     }
 
     stages {
@@ -21,6 +22,18 @@ pipeline {
                 sh 'pip3 install flake8 bandit --quiet'
                 sh 'flake8 app/ --max-line-length=120'
                 sh 'bandit -r app/ -ll'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                sh """
+                    pip install pysonar-scanner --quiet
+                    pysonar-scanner \
+                        -Dsonar.host.url=http://host.docker.internal:9000 \
+                        -Dsonar.login=${env.scanner-token} \
+                        -Dsonar.projectKey=securecloud-flask
+                """
             }
         }
 
