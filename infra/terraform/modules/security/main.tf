@@ -1,7 +1,7 @@
 variable "vpc_id" {}
 
 resource "aws_security_group" "alb" {
-  name   = "sg-alb-securecloud"
+  name   = "securecloud-alb"
   vpc_id = var.vpc_id
   ingress {
     from_port   = 80
@@ -25,7 +25,7 @@ resource "aws_security_group" "alb" {
 }
 
 resource "aws_security_group" "app" {
-  name   = "sg-app-securecloud"
+  name   = "securecloud-app"
   vpc_id = var.vpc_id
   ingress {
     from_port       = 5000
@@ -43,7 +43,7 @@ resource "aws_security_group" "app" {
 }
 
 resource "aws_security_group" "db" {
-  name   = "sg-db-securecloud"
+  name   = "securecloud-db"
   vpc_id = var.vpc_id
   ingress {
     from_port       = 3306
