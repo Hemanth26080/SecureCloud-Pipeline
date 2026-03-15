@@ -1,8 +1,8 @@
 import os
 import json
 import boto3
-import mysql.connector
 from mysql.connector import pooling
+
 
 def get_secret():
     """Fetch DB credentials from AWS Secrets Manager (never hardcode passwords!)"""
@@ -12,6 +12,7 @@ def get_secret():
     client = boto3.client("secretsmanager", region_name=region)
     secret = client.get_secret_value(SecretId=secret_name)
     return json.loads(secret["SecretString"])
+
 
 def get_db_pool():
     """Create a connection pool (reuses connections instead of opening new ones)"""

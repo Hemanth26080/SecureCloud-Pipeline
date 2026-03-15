@@ -1,7 +1,6 @@
 import os
 import logging
-import json
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 from prometheus_flask_exporter import PrometheusMetrics
 
 # --- Logging setup (structured JSON logs) ---
@@ -15,21 +14,25 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 metrics = PrometheusMetrics(app)  # Auto-exposes /metrics endpoint
 
+
 # --- Routes ---
 @app.route("/health")
 def health():
     """Liveness probe — is the app alive?"""
     return jsonify({"status": "healthy", "service": "securecloud-flask"}), 200
 
+
 @app.route("/ready")
 def ready():
     """Readiness probe — is the app ready to take traffic?"""
     return jsonify({"status": "ready"}), 200
 
+
 @app.route("/")
 def index():
     logger.info("Root endpoint hit")
     return jsonify({"message": "SecureCloud-Flask is running!"}), 200
+
 
 @app.route("/api/users", methods=["GET"])
 def get_users():
@@ -39,6 +42,7 @@ def get_users():
         {"id": 2, "name": "Bob"},
     ]
     return jsonify(users), 200
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
