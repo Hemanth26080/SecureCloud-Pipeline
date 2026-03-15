@@ -13,7 +13,7 @@ terraform {
     key            = "securecloud/terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "terraform-state-lock"
-    encrypt        = true   # State file is encrypted at rest
+    encrypt        = true
   }
 }
 
