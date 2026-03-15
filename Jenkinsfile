@@ -27,13 +27,14 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                sh """
-                    pip install pysonar-scanner --quiet
-                    pysonar-scanner \
-                        -Dsonar.host.url=http://host.docker.internal:9000 \
-                        -Dsonar.login=${SONAR_TOKEN} \
-                        -Dsonar.projectKey=securecloud-flask
-                """
+                withSonarQubeEnv('SonarQube') {
+                    sh """
+                        sonar-scanner \
+                            -Dsonar.projectKey=securecloud-flask \
+                            -Dsonar.sources=app \
+                            -Dsonar.python.version=3.11
+                    """
+                }
             }
         }
 
