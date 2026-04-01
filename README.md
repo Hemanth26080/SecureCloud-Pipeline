@@ -5,7 +5,7 @@
 ![Jenkins](https://img.shields.io/badge/Jenkins-CI%2FCD-D24939?style=flat&logo=jenkins&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Hardened-2496ED?style=flat&logo=docker&logoColor=white)
 ![Terraform](https://img.shields.io/badge/Terraform-IaC-7B42BC?style=flat&logo=terraform&logoColor=white)
-![AWS](https://img.shields.io/badge/AWS-eu--west--3-FF9900?style=flat&logo=amazonaws&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-us--east--1-FF9900?style=flat&logo=amazonaws&logoColor=white)
 ![Trivy](https://img.shields.io/badge/Trivy-0%20CVEs-1904DA?style=flat&logo=aquasecurity&logoColor=white)
 ![SonarQube](https://img.shields.io/badge/SonarQube-Quality%20Gate%20Passed-4E9BCD?style=flat&logo=sonarqube&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=flat&logo=python&logoColor=white)
